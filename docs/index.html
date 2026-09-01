@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Garage Rush – Car Builder Game</title>
+  <meta name="description" content="Build cars for impatient customers. A mobile game based on the Builder design pattern.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Garage Rush">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app">
+
+    <!-- Start screen -->
+    <section id="screen-start" class="screen active">
+      <div class="hero">
+        <div class="hero-car" aria-hidden="true">
+          <svg viewBox="0 0 200 90" class="car-svg">
+            <path d="M20 60 L40 35 L80 25 L130 25 L165 45 L185 50 L185 65 L20 65 Z" fill="#f97316"/>
+            <path d="M50 38 L82 30 L82 45 L48 45 Z" fill="#bae6fd"/>
+            <path d="M92 30 L126 30 L150 45 L92 45 Z" fill="#bae6fd"/>
+            <circle cx="55" cy="66" r="13" fill="#111827"/><circle cx="55" cy="66" r="6" fill="#9ca3af"/>
+            <circle cx="150" cy="66" r="13" fill="#111827"/><circle cx="150" cy="66" r="6" fill="#9ca3af"/>
+            <rect x="8" y="56" width="12" height="6" rx="2" fill="#9ca3af"/>
+          </svg>
+        </div>
+        <h1>Garage Rush</h1>
+        <p class="tagline">Customers are waiting. Build the right car, under budget, before the clock runs out.</p>
+        <div class="best" id="start-best" hidden>Best score: <strong id="start-best-value">0</strong></div>
+        <button class="btn btn-primary btn-big" id="btn-start">Start shift</button>
+        <button class="btn btn-ghost" id="btn-how">How to play</button>
+      </div>
+    </section>
+
+    <!-- How to play -->
+    <section id="screen-how" class="screen">
+      <div class="panel">
+        <h2>How to play</h2>
+        <ol class="how-list">
+          <li>A customer arrives with an <strong>order</strong>: a season, a budget, and sometimes a special request.</li>
+          <li>Tap one part from each category – <strong>Tires</strong>, <strong>Exhaust</strong>, and <strong>Engine</strong> – to build the car.</li>
+          <li>Watch the running <strong>total cost</strong>. Stay under budget!</li>
+          <li>Hit <strong>Deliver</strong> before the timer runs out.</li>
+          <li>Wrong build or too slow? You lose a wrench. Lose all three and the shift is over.</li>
+        </ol>
+        <p class="hint">Faster deliveries and money saved under budget earn bonus points.</p>
+        <button class="btn btn-primary" id="btn-how-back">Got it</button>
+      </div>
+    </section>
+
+    <!-- Game screen -->
+    <section id="screen-game" class="screen">
+      <header class="hud">
+        <div class="hud-item"><span class="hud-label">Score</span><span class="hud-value" id="hud-score">0</span></div>
+        <div class="hud-item hud-center"><span class="hud-label">Order</span><span class="hud-value" id="hud-order">1</span></div>
+        <div class="hud-item hud-right"><span class="hud-label">Lives</span><span class="hud-value" id="hud-lives" aria-label="lives"></span></div>
+      </header>
+
+      <div class="timer"><div class="timer-bar" id="timer-bar"></div></div>
+
+      <div class="customer" id="customer">
+        <div class="customer-avatar" id="customer-avatar">🧑</div>
+        <div class="customer-bubble">
+          <p class="customer-line" id="customer-line"></p>
+          <ul class="requirements" id="requirements"></ul>
+        </div>
+      </div>
+
+      <div class="workbench" id="workbench">
+        <div class="car-preview" id="car-preview">
+          <svg viewBox="0 0 200 90" class="car-svg">
+            <path id="car-body" d="M20 60 L40 35 L80 25 L130 25 L165 45 L185 50 L185 65 L20 65 Z" fill="#94a3b8"/>
+            <path d="M50 38 L82 30 L82 45 L48 45 Z" fill="#bae6fd"/>
+            <path d="M92 30 L126 30 L150 45 L92 45 Z" fill="#bae6fd"/>
+            <g id="car-tires" class="slot-empty">
+              <circle cx="55" cy="66" r="13" fill="#111827"/><circle cx="55" cy="66" r="6" fill="#9ca3af"/>
+              <circle cx="150" cy="66" r="13" fill="#111827"/><circle cx="150" cy="66" r="6" fill="#9ca3af"/>
+            </g>
+            <g id="car-exhaust" class="slot-empty">
+              <rect x="6" y="56" width="14" height="6" rx="2" fill="#9ca3af"/>
+              <rect id="car-exhaust-2" x="6" y="48" width="14" height="6" rx="2" fill="#9ca3af" opacity="0"/>
+            </g>
+            <g id="car-engine" class="slot-empty">
+              <rect x="138" y="30" width="22" height="10" rx="2" fill="#374151"/>
+            </g>
+          </svg>
+          <div class="car-cost">
+            <span class="car-cost-label">Total</span>
+            <span class="car-cost-value" id="car-cost">$0</span>
+            <span class="car-cost-budget" id="car-budget"></span>
+          </div>
+        </div>
+
+        <div class="parts" id="parts"></div>
+      </div>
+
+      <footer class="actions">
+        <button class="btn btn-ghost btn-small" id="btn-reset">Clear</button>
+        <button class="btn btn-primary" id="btn-deliver" disabled>Deliver</button>
+      </footer>
+
+      <div class="toast" id="toast" hidden></div>
+    </section>
+
+    <!-- Game over -->
+    <section id="screen-over" class="screen">
+      <div class="panel">
+        <h2>Shift over</h2>
+        <p class="over-score">Score <strong id="over-score">0</strong></p>
+        <p class="over-stats" id="over-stats"></p>
+        <p class="over-best" id="over-best" hidden>New best score!</p>
+        <button class="btn btn-primary btn-big" id="btn-again">Play again</button>
+        <button class="btn btn-ghost" id="btn-home">Main menu</button>
+      </div>
+    </section>
+
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
