@@ -126,7 +126,7 @@
         { icon: '💵', text: `Budget ${money(budget)}` },
         ...(extra.label ? [{ icon: '⭐', text: extra.label }] : []),
       ],
-      timeLimit: Math.max(12, 30 - orderNumber),
+      timeLimit: Math.max(15, 33 - orderNumber),
     };
   }
 
